@@ -227,7 +227,6 @@ func (c *Client) GetUser(ctx context.Context, accessToken string) (*User, error)
 	return &user, nil
 }
 
-// 7. Switch Role
 func (c *Client) SwitchRole(ctx context.Context, accessToken, role string) (*Token, error) {
 	data := struct {
 		Role string `json:"role"`
@@ -272,7 +271,6 @@ func (c *Client) SwitchRole(ctx context.Context, accessToken, role string) (*Tok
 	return &token, nil
 }
 
-// 8. Check Access to Resource
 func (c *Client) CheckAccess(ctx context.Context, accessToken, resource string) (bool, error) {
 	v := url.Values{}
 	v.Set("resource", resource)
@@ -315,7 +313,6 @@ func (c *Client) CheckAccess(ctx context.Context, accessToken, resource string) 
 	return result.Data.Allowed, nil
 }
 
-// Internal: Exchange code for token
 func (c *Client) exchange(ctx context.Context, code string) (*Token, error) {
 	data := url.Values{}
 	data.Set("grant_type", "authorization_code")
