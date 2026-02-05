@@ -303,6 +303,7 @@ func (c *Client) CheckAccess(ctx context.Context, accessToken, resource string) 
 		Success bool `json:"success"`
 		Data    struct {
 			Allowed bool `json:"allowed"`
+			User    User `json:"user"`
 		} `json:"data"`
 	}
 
