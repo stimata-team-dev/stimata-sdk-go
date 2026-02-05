@@ -271,13 +271,13 @@ func (c *Client) SwitchRole(ctx context.Context, accessToken, role string) (*Tok
 	return &token, nil
 }
 
-func (c *Client) CheckAccess(ctx context.Context, accessToken, resource string) (bool, error) {
+func (c *Client) CheckAccess(ctx context.Context, accessToken, resource string) (bool, *User, error) {
 	v := url.Values{}
 	v.Set("resource", resource)
 
 	req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s/v1/check-access?%s", c.config.BaseURL, v.Encode()), nil)
 	if err != nil {
-		return false, err
+		return false, nil, err
 	}
 
 	req.Header.Set("Content-Type", "application/json")
@@ -286,17 +286,17 @@ func (c *Client) CheckAccess(ctx context.Context, accessToken, resource string) 
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
-		return false, err
+		return false, nil, err
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return false, err
+		return false, nil, err
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return false, fmt.Errorf("check access failed: %s", string(body))
+		return false, nil, fmt.Errorf("check access failed: %s", string(body))
 	}
 
 	var result struct {
@@ -308,10 +308,10 @@ func (c *Client) CheckAccess(ctx context.Context, accessToken, resource string) 
 	}
 
 	if err := json.Unmarshal(body, &result); err != nil {
-		return false, err
+		return false, nil, err
 	}
 
-	return result.Data.Allowed, nil
+	return result.Data.Allowed, &result.Data.User, nil
 }
 
 func (c *Client) exchange(ctx context.Context, code string) (*Token, error) {
