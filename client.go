@@ -113,12 +113,13 @@ func (c *Client) HandleCallback(ctx context.Context, r *http.Request, expectedSt
 	return c.exchange(ctx, code)
 }
 
-func (c *Client) RefreshToken(ctx context.Context, refreshToken string) (*Token, error) {
+func (c *Client) RefreshToken(ctx context.Context, refreshToken string, role string) (*Token, error) {
 	data := url.Values{}
 	data.Set("grant_type", "refresh_token")
 	data.Set("refresh_token", refreshToken)
 	data.Set("client_id", c.config.ClientID)
 	data.Set("client_secret", c.config.ClientSecret)
+	data.Set("role", role)
 
 	return c.doTokenRequest(ctx, data)
 }
