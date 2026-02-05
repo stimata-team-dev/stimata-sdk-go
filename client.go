@@ -35,10 +35,11 @@ type Token struct {
 }
 
 type User struct {
-	ID        string `json:"id"`
-	Email     string `json:"email"`
-	Name      string `json:"name"`
-	AvatarURL string `json:"avatar_url,omitempty"`
+	ID        string   `json:"id"`
+	Email     string   `json:"email"`
+	Name      string   `json:"name"`
+	AvatarURL string   `json:"avatar_url,omitempty"`
+	Roles     []string `json:"roles"`
 }
 
 type IntrospectResponse struct {
